@@ -6,11 +6,13 @@
                  [compojure "1.5.1"]
                  [ring "1.3.2"]
                  [ring/ring-defaults "0.2.1"]
-                 [cheshire "5.4.0"]
-                 [ring-logger-onelog "0.7.6"]]
+                 [ring-logger-onelog "0.7.6"]
+                 [ring-json-response "0.2.0"]
+                 [http-kit "2.2.0"]]
   :plugins [[lein-ring "0.9.7"]
             [lein-ancient "0.5.5"]]
   :ring {:handler webhook2.handler/app}
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
-                        [ring/ring-mock "0.3.0"]]}})
+                        [ring/ring-mock "0.3.0"]
+                        [reloaded.repl "0.2.2"]]}})

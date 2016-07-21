@@ -9,6 +9,7 @@
                  [ring-logger-onelog "0.7.6"]
                  [ring/ring-json "0.4.0"]
                  [eureka-client "0.2.0"]
+                 [com.couchbase.client/java-client "2.3.1"]
                  [clj-http/clj-http "3.1.0"]]
   :plugins [[lein-ring "0.9.7"]
             [lein-ancient "0.5.5"]]

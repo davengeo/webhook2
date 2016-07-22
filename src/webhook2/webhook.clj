@@ -16,12 +16,14 @@
                                    (:body)
                                    (keyz)))
 
-(defn process [request]  (let [_id (extract :_id request)] ( do
-                          (logger/info _id)
-                          (logger/info (exists _id))
-                          (>!! door (:body request))
-                          (response  (:body request))
-                          )))
+(defn process [request]  (let [_id (extract :_id request)]
+                           ( do
+                            (logger/info _id)
+                            (logger/info (exists _id))
+                            (>!! door (:body request))
+                            (response  (:body request))
+                            )
+                           ))
 
 (def event-loop (go
                   (loop []
@@ -30,6 +32,3 @@
                          (recur)
                          )
                        )))
-
-
-

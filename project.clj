@@ -3,6 +3,7 @@
   :url "http://davengeo.com/"
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.clojure/core.async "0.2.385"]
                  [compojure "1.5.1"]
                  [ring "1.3.2"]
                  [ring/ring-defaults "0.2.1"]

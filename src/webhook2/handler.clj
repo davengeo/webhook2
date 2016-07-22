@@ -2,7 +2,7 @@
   (:require [compojure.core :refer [defroutes GET POST]]
             [compojure.route :refer [resources not-found]]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
-            [ring.logger.onelog :as logger]
+            [ring.logger.onelog :refer [wrap-with-logger]]
             [onelog.core :as onelog]
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
 ;[webhook2.eureka :as eureka]
@@ -10,8 +10,8 @@
             [cheshire.core :refer :all]))
 
 (defroutes app-routes
-           (GET "/" [] (encode {:webhook "up" :baz 5} {:pretty true}))
-           (POST "/webhook" request (webhook/webhook request))
+           (GET "/" [] (encode {:webhook "up" :bar 5} {:pretty true}))
+           (POST "/webhook" request (webhook/process request))
            (resources "/public")
            (not-found "Not Found"))
 
@@ -25,7 +25,7 @@
 (def app
   (-> app-routes
       (wrap-defaults (assoc-in site-defaults [:security :anti-forgery] false))
-      (logger/wrap-with-logger)
+      (wrap-with-logger)
       (wrap-content-json)
       (wrap-json-body {:keywords? true :bigdecimals? true})
       (wrap-json-response)

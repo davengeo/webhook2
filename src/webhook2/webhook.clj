@@ -2,11 +2,12 @@
   (:require
     [clojure.core.async :refer :all]
     [onelog.core :as logger]
-    [ring.util.response :refer [response]])
+    [cheshire.core :refer :all]
+    [ring.util.response :refer [response status]])
   (:import (com.couchbase.client.java CouchbaseCluster Bucket)))
 
 (def cbinit (let [bucket-name "sync_gateway", cluster (CouchbaseCluster/create)]
-                   (.openBucket cluster bucket-name)))
+              (.openBucket cluster bucket-name)))
 
 (def door (chan))
 
@@ -16,19 +17,24 @@
                                    (:body)
                                    (keyz)))
 
+(defn- bad-response [msg] (-> (response (encode {:message msg}))
+                              (status 400)))
+
+(defn- accepted [id] (-> (response (encode { :_id id :status "accepted"}))
+                  (status 201)))
+
 (defn process [request]  (let [_id (extract :_id request)]
-                           ( do
-                            (logger/info _id)
-                            (logger/info (exists _id))
-                            (>!! door (:body request))
-                            (response  (:body request))
-                            )
+                           (cond
+                             (nil? _id) (bad-response "not valid id")
+                             (not (exists _id)) (bad-response "not existing id")
+                             ;open the door
+                             :else (do (>!! door (:body request))
+                                       (accepted _id)))
                            ))
 
 (def event-loop (go
                   (loop []
-                       (when-some [val (<! door)]
-                         (logger/info (str "Received message:" val))
-                         (recur)
-                         )
-                       )))
+                    (when-some [val (<! door)]
+                      (logger/info (str "Received message:" val))
+                      (recur))
+                    )))

@@ -16,7 +16,7 @@
            (not-found "Not Found"))
 
 (onelog/start!)
-(onelog/set-debug!)
+(onelog/set-info!)
 ;(eureka/register "localhost" 8888 "webhook2" 3000)
 
 (defn wrap-content-json [h]

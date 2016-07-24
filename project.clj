@@ -18,4 +18,7 @@
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                         [ring/ring-mock "0.3.0"]
-                        [reloaded.repl "0.2.2"]]}})
+                        [reloaded.repl "0.2.2"]
+                        ;[midje "1.8.3"]
+                        ]
+         }})

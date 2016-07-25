@@ -27,14 +27,16 @@
 (defn get-chan [n] ((keyword (str n)) pool))
 
 (defn listener [n nmax]
+  (let [seq-ch (into [] (vals pool))]
   (if (< n nmax)
     (do
       (async/go-loop []
-               (when-some [val (async/<! (get-chan n))]
-                 (logger/info (str "Received message:" val " in listener:" n))
+               (when-some [[val p] (async/alts! seq-ch)]
+                 (logger/info (str "Received message:" val " in listener:" n " from object" p))
                  (recur)))
       (logger/info (str "listener " n " created"))
-      (recur (+ 1 n) nmax))))
+      (recur (+ 1 n) nmax)
+      ))))
 
 (async/thread (listener 0, 10))
 

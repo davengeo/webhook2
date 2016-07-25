@@ -28,6 +28,6 @@
   (is (instance? ManyToManyChannel (:5 pool)))
   (is (instance? ManyToManyChannel (:6 pool)))
   (is (instance? ManyToManyChannel (:7 pool)))
-  (is (instance? ManyToManyChannel (:8 pool)))
-  (is (instance? ManyToManyChannel (:9 pool)))
+  (is (instance? ManyToManyChannel (get-chan 8)))
+  (is (instance? ManyToManyChannel (get-chan 9)))
   (is (instance? ManyToManyChannel (get-random-chan))))

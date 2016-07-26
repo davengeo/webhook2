@@ -12,6 +12,7 @@
     [clojure.test :refer :all])
   (:import (clojure.core.async.impl.channels ManyToManyChannel)))
 
+(def pool (create-pool 10))
 
 (deftest pool_is_not_nil
   (is (not (nil? pool))))
@@ -28,6 +29,7 @@
   (is (instance? ManyToManyChannel (:5 pool)))
   (is (instance? ManyToManyChannel (:6 pool)))
   (is (instance? ManyToManyChannel (:7 pool)))
-  (is (instance? ManyToManyChannel (get-chan 8)))
-  (is (instance? ManyToManyChannel (get-chan 9)))
-  (is (instance? ManyToManyChannel (get-random-chan))))
+  (is (instance? ManyToManyChannel (get-chan 8 pool)))
+  (is (instance? ManyToManyChannel (get-chan 9 pool)))
+  (is (instance? ManyToManyChannel (get-random-chan pool))))
+

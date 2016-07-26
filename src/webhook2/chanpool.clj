@@ -12,35 +12,37 @@
 (defn- create-pair [n]
   (into {} {(keyword (str n)) (async/chan)}))
 
-(defn- create-pool [n]
+(defn create-pool [n]
   (reduce merge {}
-        (for [n (take n (range))]
-          (create-pair n))))
+          (for [n (take n (range))]
+            (create-pair n))))
 
-(defn- random-channel [coll]
+(defn random-channel [coll]
   ((keyword (str (rand-int (- (count coll) 1)))) coll))
 
-(def pool (create-pool 10))
+(defn get-random-chan [pool] (random-channel pool))
 
-(defn get-random-chan [] (random-channel pool))
+(defn get-chan [n pool] ((keyword (str n)) pool))
 
-(defn get-chan [n] ((keyword (str n)) pool))
+(defn pool-put! [value pool]
+  (async/go
+    (while
+      (not (async/offer! (get-random-chan pool) value)))))
 
-(defn pool-put! [value] (async/go
-                          (while (not (async/offer! (get-random-chan) value)))) )
-
-(defn listener [n nmax]
+(defn create-listener [nmax pool fn]
+  (loop [n 0]
   (let [seq-ch (into [] (vals pool))]
-  (if (< n nmax)
-    (do
-      (async/go-loop []
-               (when-some [[val p] (async/alts! seq-ch)]
-                 (logger/info (str "Received message:" val " in listener:" n " from object" p))
-                 (recur)))
-      (logger/info (str "listener " n " created"))
-      (recur (+ 1 n) nmax)
+    (if (< n nmax)
+      (do
+        (async/go-loop []
+          (when-some [[val p] (async/alts! seq-ch)]
+            (async/go (apply fn [val p])))
+            (recur))
+        (logger/info (str "listener " n " created"))
+        (recur (+ 1 n))
+        )
       ))))
 
-(async/thread (listener 0, 100))
+
 
 

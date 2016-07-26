@@ -1,7 +1,6 @@
 (ns webhook2.webhook
   (:require
     [clojure.core.async :refer :all]
-    [onelog.core :as logger]
     [cheshire.core :refer :all]
     [webhook2.chanpool :refer :all]
     [ring.util.response :refer [response status]])
@@ -27,6 +26,7 @@
                             (nil? _id) (bad-response "not valid id")
                             (not (exists _id)) (bad-response "not existing id")
                             ;open the door
-                            :else (do (go (>! (get-random-chan) (:body request)))
-                                      (accepted _id)))
-                          ))
+                            :else
+                              (do (pool-put! (:body request))
+                                      (accepted _id))
+                          )))

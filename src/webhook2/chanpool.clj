@@ -26,6 +26,9 @@
 
 (defn get-chan [n] ((keyword (str n)) pool))
 
+(defn pool-put! [value] (async/go
+                          (while (not (async/offer! (get-random-chan) value)))) )
+
 (defn listener [n nmax]
   (let [seq-ch (into [] (vals pool))]
   (if (< n nmax)
@@ -38,6 +41,6 @@
       (recur (+ 1 n) nmax)
       ))))
 
-(async/thread (listener 0, 10))
+(async/thread (listener 0, 100))
 
 

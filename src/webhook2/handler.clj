@@ -1,4 +1,5 @@
 (ns webhook2.handler
+  (:use org.httpkit.server)
   (:require [compojure.core :refer [defroutes GET POST]]
             [compojure.route :refer [not-found]]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
@@ -15,7 +16,6 @@
 
 (onelog/start!)
 (onelog/set-info!)
-;(eureka/register "localhost" 8888 "webhook2" 3000)
 
 (defn wrap-content-json [h]
   (fn [req] (assoc-in (h req) [:headers "Content-Type"] "application/json; charset=utf-8")))
@@ -26,6 +26,6 @@
       (wrap-with-logger)
       (wrap-content-json)
       (wrap-json-body {:keywords? true :bigdecimals? true})
-      (wrap-json-response)
-      ))
+      (wrap-json-response)))
 
+(run-server #'app {:port 3000})

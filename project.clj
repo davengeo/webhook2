@@ -10,6 +10,7 @@
                  [ring-logger-onelog "0.7.6"]
                  [ring/ring-json "0.4.0"]
                  [eureka-client "0.2.0"]
+                 [http-kit "2.1.18"]
                  [com.couchbase.client/java-client "2.3.1"]
                  [clj-http/clj-http "3.1.0"]]
   :plugins [[lein-ring "0.9.7"]
@@ -18,7 +19,5 @@
   :profiles
   {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                         [ring/ring-mock "0.3.0"]
-                        [reloaded.repl "0.2.2"]
-                        ;[midje "1.8.3"]
-                        ]
+                        [reloaded.repl "0.2.2"]]
          }})

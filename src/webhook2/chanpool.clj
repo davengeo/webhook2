@@ -38,7 +38,7 @@
 
 (defn create-listener [nmax pool fn]
   "create nmax listener to the pool when any value arrives to any channel
-  then the functionfn is applied with the value as argument"
+  then the functionfn is applied asynchronously with the value as argument"
   (loop [n 0]
   (let [seq-ch (into [] (vals pool))]
     (if (< n nmax)

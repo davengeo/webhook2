@@ -13,11 +13,14 @@
     [webhook2.couchbase :refer :all]
     [ring.util.response :refer [response status]]))
 
-(def pool (create-pool 20))
+(def pool
+  (create-pool 20))
 
-(defn just-log [value n] (logger/info (str "Received message:" value " in listener:" n)))
+(defn just-log [value n]
+  (logger/info (str "Received message:" value " in listener:" n)))
 
-(def listeners (create-listener 100 pool just-log))
+
+(create-listener 100 pool just-log)
 
 (defn- extract [keyz, request] (-> request
                                    (:body)

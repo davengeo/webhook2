@@ -5,17 +5,18 @@
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.logger.onelog :refer [wrap-with-logger]]
             [onelog.core :as onelog]
+            [consul.core :as consul]
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
             [webhook2.webhook :as webhook]
             [cheshire.core :refer :all]))
+
+(onelog/start!)
+(onelog/set-info!)
 
 (defroutes app-routes
            (GET "/" [] (encode {:webhook "up" :bar 5} {:pretty true}))
            (POST "/webhook" request (webhook/process request))
            (not-found "Not Found"))
-
-(onelog/start!)
-(onelog/set-info!)
 
 (defn wrap-content-json [h]
   (fn [req] (assoc-in (h req) [:headers "Content-Type"] "application/json; charset=utf-8")))

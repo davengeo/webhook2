@@ -9,7 +9,7 @@
     [clojure.core.async :as async]
     [onelog.core :as logger]))
 
-(defn- create-pair [n]
+(defn create-pair [n]
   "create a pair {:n chan} where n is any number"
   (into {} {(keyword (str n)) (async/chan)}))
 
@@ -37,8 +37,8 @@
       (not (async/offer! (random-channel pool) value)))))
 
 (defn create-listener [nmax pool fn]
-  "create nmax listener to the pool when any value arrives to any channel
-  then the functionfn is applied asynchronously with the value as argument"
+  "create nmax listeners to the pool when any value arrives to any channel
+  then the function fn is applied asynchronously with the value coming form the cannel as argument"
   (loop [n 0]
   (let [seq-ch (into [] (vals pool))]
     (if (< n nmax)

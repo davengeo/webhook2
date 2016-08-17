@@ -11,6 +11,7 @@
                  [ring/ring-json "0.4.0"]
                  [eureka-client "0.2.0"]
                  [http-kit "2.1.18"]
+                 [consul-clojure "0.1.0"]
                  [com.couchbase.client/java-client "2.3.1"]
                  [clj-http/clj-http "3.1.0"]]
   :plugins [[lein-ring "0.9.7"]
